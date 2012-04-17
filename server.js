@@ -47,4 +47,4 @@ everyone.now.addName = function(name){
 	visitors.unshift(name);
 	//console.log(visitors)
 	everyone.now.populateVisitors(visitors);
-}
+}	
