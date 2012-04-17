@@ -1,1 +1,5 @@
 .nodester.appconfig
+
+*.sw*
+.DS_Store
+node_modules

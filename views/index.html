@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+	<style>
+		.center
+			{
+			margin-left:auto;
+			margin-right:auto;
+			width:70%;
+			background-color:#b0e0e6;
+			}
+	</style>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+	<script src="/nowjs/now.js"></script>
+	<script type='text/javascript' src='/javascripts/pagescript.js'></script>
+  <TITLE> DLQ Chat </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+
+ </HEAD>
+
+ <BODY>
+  <div class='center'>
+  <h3>DLQ Chat</h3>
+
+  <div id='chatarea'>
+	<div>Hello User!! {{! ${now.name = prompt("Please enter your name.","Anonymous")}You can start chatting right away.</div>
+  </div>
+  <textarea id='msgbox'></textarea><input type='button' value='Send' id='send-button'/>
+  <div id='visitors'>
+	Recent Visitors:<br/>
+  </div>
+  <h6>Test sample page created by ${author}</h6>
+  </div>
+  
+ </BODY>
+</HTML>
