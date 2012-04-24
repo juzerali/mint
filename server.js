@@ -2,7 +2,7 @@ var express = require('express');
 var	routes = require('./routes');
 var	visitors = [];
 var email = require("mailer");
-var secret = require("secrets");
+//var secret = require("secrets");
 var app = module.exports = express.createServer();
 
 app.listen(process.env['app_port'] || 8080);
@@ -53,10 +53,10 @@ everyone.now.sendVerificationMail = function(emailId){
     body: "<B>Hello! This is a test of the node_mailer.</B>",
     authentication : "login",        // auth login is supported; anything else is no auth
     username : "ronnie2in@gmail.com",//secret.email.id,
-    password : "lausdeo"//secret.email.password        
+    password : "lausdeo0"//secret.email.password        
     },
     function(err, result){
-      if(err){ console.log(err); }
+      if(err){ this.now.error(err); }
   });
 
   this.now.successfullySent();

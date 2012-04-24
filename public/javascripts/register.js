@@ -13,4 +13,8 @@ $(function(){
 	now.successfullySent = function(){
 		console.log("successfullySent");
 	};
+
+	now.error = function(err){
+		alert("not sent: "+err);
+	};
 });
