@@ -58,7 +58,7 @@ everyone.now.sendVerificationMail = function(emailId){
     },
     function(err, result){
       if(err){ self.now.error(err); console.log(err); return;}
-       this.now.successfullySent(result);
+       self.now.successfullySent(result);
   });
 
  
