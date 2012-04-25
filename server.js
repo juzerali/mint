@@ -46,7 +46,7 @@ everyone.now.sendVerificationMail = function(emailId){
   email.send({
     host : "smtp.gmail.com",              // smtp server hostname
     port : "465",                     // smtp server port
-   // ssl : true,
+    ssl : true,
     domain : "mint.nodester.com",            // domain used by client to identify itself to server
     to : emailId,
     from : "ronnie2in@gmail.com",
