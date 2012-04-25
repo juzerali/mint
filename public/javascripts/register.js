@@ -8,13 +8,14 @@ $(function(){
 			e.preventDefault();
 			now.sendVerificationMail($('#email').val());
 		});
+
+		now.successfullySent = function(){
+			console.log("successfullySent");
+		};
+
+		now.error = function(err){
+			alert("not sent: "+JSON.stringify(err));
+		};
 	});
 
-	now.successfullySent = function(){
-		console.log("successfullySent");
-	};
-
-	now.error = function(err){
-		alert("not sent: "+err);
-	};
 });

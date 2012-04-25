@@ -40,13 +40,14 @@ app.get('/applicationform.html', function(req,res){
     res.render(__dirname + '/views/applicationform.html', {author: "Juzer Ali"});
 });
 
-var everyone = require("now").initialize(app);
+var everyone = require("now").initialize(app, {socketio: {transports: ['xhr-polling', 'jsonp-polling', 'htmlfile']}});
 everyone.now.sendVerificationMail = function(emailId){
+  var self = this;
   email.send({
     host : "smtp.gmail.com",              // smtp server hostname
     port : "465",                     // smtp server port
    // ssl : true,
-    domain : "http://mint.nodester.com/",            // domain used by client to identify itself to server
+    domain : "mint.nodester.com",            // domain used by client to identify itself to server
     to : emailId,
     from : "ronnie2in@gmail.com",
     subject : "You have been registered",
@@ -56,10 +57,11 @@ everyone.now.sendVerificationMail = function(emailId){
     password : "lausdeo0"//secret.email.password        
     },
     function(err, result){
-      if(err){ this.now.error(err); }
+      if(err){ self.now.error(err); console.log(err); return;}
+       this.now.successfullySent(result);
   });
 
-  this.now.successfullySent();
+ 
 };	
 
 everyone.now.addName = function(name){
