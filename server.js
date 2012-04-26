@@ -4,6 +4,15 @@ var	visitors = [];
 var email = require("mailer");
 //var secret = require("secrets");
 var app = module.exports = express.createServer();
+var nodemailer = require("nodemailer");
+var gmailer = nodemailer.createTransport("SMTP",{
+  service: "Gmail",
+  auth: {
+    user: "ronnie2in@gmail.com",
+    pass: "lausdeo0"
+  }
+});
+
 
 app.listen(process.env['app_port'] || 8080);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
@@ -42,6 +51,7 @@ app.get('/applicationform.html', function(req,res){
 
 var everyone = require("now").initialize(app, {socketio: {transports: ['xhr-polling', 'jsonp-polling', 'htmlfile']}});
 everyone.now.sendVerificationMail = function(emailId){
+  console.log(emailId);
   var self = this;
   email.send({
     host : "smtp.gmail.com",              // smtp server hostname
@@ -61,8 +71,18 @@ everyone.now.sendVerificationMail = function(emailId){
       else self.now.successfullySent(result);
   });
 
- 
-};	
+  var mailOptions = {
+    from: "ronnie2in@gmail.com",
+    to: emailId,
+    subject: "You have been successfully registered",
+    html: "<b>You have been successfully registered</b>"
+  };
+
+  gmailer.sendMail(mailOptions, function(error, response){
+    if(error) self.now.error(error);
+    else self.now.successfullySent(response);
+  });
+ };	
 
 everyone.now.addName = function(name){
 	var self = this;

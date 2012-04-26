@@ -9,8 +9,9 @@ $(function(){
 			now.sendVerificationMail($('#email').val());
 		});
 
-		now.successfullySent = function(){
-			console.log("successfullySent");
+		now.successfullySent = function(response){
+			$('input').hide;
+			$('form').text("Check Your email for further instructions"+" "+response);
 		};
 
 		now.error = function(err){
