@@ -8,8 +8,8 @@ var nodemailer = require("nodemailer");
 var gmailer = nodemailer.createTransport("SMTP",{
   service: "Gmail",
   auth: {
-    user: "ronnie2in@gmail.com",
-    pass: "lausdeo0"
+    user: process.env["emailUserName"],
+    pass: process.env["emailPassword"]
   }
 });
 
@@ -51,7 +51,7 @@ app.get('/applicationform.html', function(req,res){
 
 var everyone = require("now").initialize(app, {socketio: {transports: ['xhr-polling', 'jsonp-polling', 'htmlfile']}});
 everyone.now.sendVerificationMail = function(emailId){
-  console.log(emailId);
+  //console.log(emailId);
   var self = this;
   email.send({
     host : "smtp.gmail.com",              // smtp server hostname
@@ -59,12 +59,12 @@ everyone.now.sendVerificationMail = function(emailId){
     ssl : true,
     domain : "mint.nodester.com",            // domain used by client to identify itself to server
     to : emailId,
-    from : "ronnie2in@gmail.com",
+    from : process.env["emailUserName"],
     subject : "You have been registered",
     body: "<B>Hello! This is a test of the node_mailer.</B>",
-    authentication : "login",        // auth login is supported; anything else is no auth
-    username : "ronnie2in@gmail.com",//secret.email.id,
-    password : "lausdeo0"//secret.email.password        
+    authentication : "login",       
+    username : process.env["emailUserName"],
+    password : process.env["emailPassword"],        
     },
     function(err, result){
       if(err){ self.now.error(err); console.log(err); return;}
@@ -72,7 +72,7 @@ everyone.now.sendVerificationMail = function(emailId){
   });
 
   var mailOptions = {
-    from: "ronnie2in@gmail.com",
+    from: process.env["emailUserName"],
     to: emailId,
     subject: "You have been successfully registered",
     html: "<b>You have been successfully registered</b>"
