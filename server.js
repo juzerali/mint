@@ -75,7 +75,6 @@ everyone.now.sendVerificationMail = function(emailId){
       html: "Click on the below mentioned link to activate your Mint account<br/><br/><br/> <a href='"+activationLink+"'>"+activationLink+"</a>"
     };
 
-    console.log("USER IS: "+JSON.stringify(user)+"\n\n");
     db.collection("users").save(user, {}, function(DBerr, coll){
       if(DBerr){
         console.log(DBerr);
