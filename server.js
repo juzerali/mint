@@ -11,11 +11,10 @@ var gmailer = nodemailer.createTransport("SMTP",{
   }
 });
 
-console.log(JSON.stringify(gmailer));
 
 var mongo = require("mongoskin");
 var db = mongo.db(process.env["dbusername"] + ":" + process.env["dbpassword"] + "@staff.mongohq.com:10044/mint");
-
+console.log(process.env["dbusername"] + ":" + process.env["dbpassword"] + "@staff.mongohq.com:10044/mint");
 
 app.listen(process.env['app_port'] || 8080);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
@@ -67,19 +66,25 @@ everyone.now.sendVerificationMail = function(emailId){
       "created": new Date().getTime()
     };
 
+    var activationLink = APP_URL+"/activate/"+token;
+
     var mailOptions = {
       from: process.env["emailUserName"],
       to: emailId,
       subject: "Confirm Registration on Mint",
-      html: "Click on the below mentioned link to activate your Mint account\n\n\n <a href='"+APP_URL+"/activate/"+token+"+'></a>"
+      html: "Click on the below mentioned link to activate your Mint account<br/><br/><br/> <a href='"+activationLink+"'>"+activationLink+"</a>"
     };
 
     console.log("USER IS: "+JSON.stringify(user)+"\n\n");
-    db.collection("users").save(user, {}, function(err, coll){
-      gmailer.sendMail(mailOptions, function(error, response){
-        if(error){
-          self.now.error(error);
-          console.log(error);
+    db.collection("users").save(user, {}, function(DBerr, coll){
+      if(DBerr){
+        console.log(DBerr);
+        return;
+      }
+      gmailer.sendMail(mailOptions, function(Mailerror, response){
+        if(Mailerror){
+          self.now.error(Mailerror);
+          console.log(Mailerror);
         } 
         else self.now.successfullySent(response);
       });
