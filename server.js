@@ -14,7 +14,6 @@ var gmailer = nodemailer.createTransport("SMTP",{
 
 var mongo = require("mongoskin");
 var db = mongo.db(process.env["dbusername"] + ":" + process.env["dbpassword"] + "@staff.mongohq.com:10044/mint");
-console.log(process.env["dbusername"] + ":" + process.env["dbpassword"] + "@staff.mongohq.com:10044/mint");
 
 app.listen(process.env['app_port'] || 8080);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
