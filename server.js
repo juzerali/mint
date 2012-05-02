@@ -11,6 +11,8 @@ var gmailer = nodemailer.createTransport("SMTP",{
   }
 });
 
+console.log(JSON.stringify(gmailer));
+
 var mongo = require("mongoskin");
 var db = mongo.db(process.env["dbusername"] + ":" + process.env["dbpassword"] + "@staff.mongohq.com:10044/mint");
 
@@ -58,7 +60,7 @@ everyone.now.sendVerificationMail = function(emailId){
   var self = this;
   require('crypto').randomBytes(48, function(ex, buf) {
     var token = buf.toString('hex');
-    console.log("TOKEN IS: "+token);
+
     var user = {
       "email": emailId,
       "token": token,
@@ -72,7 +74,7 @@ everyone.now.sendVerificationMail = function(emailId){
       html: "Click on the below mentioned link to activate your Mint account\n\n\n <a href='"+APP_URL+"/activate/"+token+"+'></a>"
     };
 
-    console.log("USER IS: "+JSON.stringify(user));
+    console.log("USER IS: "+JSON.stringify(user)+"\n\n");
     db.collection("users").save(user, {}, function(err, coll){
       gmailer.sendMail(mailOptions, function(error, response){
         if(error){
@@ -84,13 +86,3 @@ everyone.now.sendVerificationMail = function(emailId){
     });
   });
  };	
-
-everyone.now.addName = function(name){
-	var self = this;
-	//console.log(name,self.name);
-	var index = visitors.indexOf(name);
-	if(index >= 0) visitors.splice(index,1);
-	visitors.unshift(name);
-	//console.log(visitors)
-	everyone.now.populateVisitors(visitors);
-}	
