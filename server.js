@@ -55,31 +55,34 @@ var everyone = require("now").initialize(app, {socketio: {transports: ['xhr-poll
 
 
 everyone.now.sendVerificationMail = function(emailId){
+  var self = this;
   require('crypto').randomBytes(48, function(ex, buf) {
     var token = buf.toString('hex');
-  });
+    console.log("TOKEN IS: "+token);
+    var user = {
+      "email": emailId,
+      "token": token,
+      "created": new Date().getTime()
+    };
 
-  var user = {
-    "email": emailId,
-    "token": token,
-    "created": new Date().getTime()
-  }
+    var mailOptions = {
+      from: process.env["emailUserName"],
+      to: emailId,
+      subject: "Confirm Registration on Mint",
+      html: "Click on the below mentioned link to activate your Mint account\n\n\n <a href='"+APP_URL+"/activate/"+token+"+'></a>"
+    };
 
-  db.collection("users").save(user, {}, function(err, coll){
-    gmailer.sendMail(mailOptions, function(error, response){
-      if(error) self.now.error(error);
-      else self.now.successfullySent(response);
+    console.log("USER IS: "+JSON.stringify(user));
+    db.collection("users").save(user, {}, function(err, coll){
+      gmailer.sendMail(mailOptions, function(error, response){
+        if(error){
+          self.now.error(error);
+          console.log(error);
+        } 
+        else self.now.successfullySent(response);
+      });
     });
   });
-
-  var mailOptions = {
-    from: process.env["emailUserName"],
-    to: emailId,
-    subject: "Confirm Registration on Mint",
-    html: "Click on the below mentioned link to activate your Mint account\n\n\n <a href='"+APP_URL+"/activate/"+token+"+'></a>"
-  };
-
-  
  };	
 
 everyone.now.addName = function(name){
