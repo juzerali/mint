@@ -1,8 +1,6 @@
+const APP_URL = "http://mint.nodester.com";
 var express = require('express');
 var	routes = require('./routes');
-var	visitors = [];
-var email = require("mailer");
-//var secret = require("secrets");
 var app = module.exports = express.createServer();
 var nodemailer = require("nodemailer");
 var gmailer = nodemailer.createTransport("SMTP",{
@@ -12,6 +10,9 @@ var gmailer = nodemailer.createTransport("SMTP",{
     pass: process.env["emailPassword"]
   }
 });
+
+var mongo = require("mongoskin");
+var db = mongo.db(process.env["dbusername"] + ":" + process.env["dbpassword"] + "@staff.mongohq.com:10044/mint");
 
 
 app.listen(process.env['app_port'] || 8080);
@@ -49,39 +50,36 @@ app.get('/applicationform.html', function(req,res){
     res.render(__dirname + '/views/applicationform.html', {author: "Juzer Ali"});
 });
 
+
 var everyone = require("now").initialize(app, {socketio: {transports: ['xhr-polling', 'jsonp-polling', 'htmlfile']}});
+
+
 everyone.now.sendVerificationMail = function(emailId){
-  //console.log(emailId);
-  var self = this;
-  email.send({
-    host : "smtp.gmail.com",              // smtp server hostname
-    port : "465",                     // smtp server port
-    ssl : true,
-    domain : "mint.nodester.com",            // domain used by client to identify itself to server
-    to : emailId,
-    from : process.env["emailUserName"],
-    subject : "You have been registered",
-    body: "<B>Hello! This is a test of the node_mailer.</B>",
-    authentication : "login",       
-    username : process.env["emailUserName"],
-    password : process.env["emailPassword"],        
-    },
-    function(err, result){
-      if(err){ self.now.error(err); console.log(err); return;}
-      else self.now.successfullySent(result);
+  require('crypto').randomBytes(48, function(ex, buf) {
+    var token = buf.toString('hex');
+  });
+
+  var user = {
+    "email": emailId,
+    "token": token,
+    "created": new Date().getTime()
+  }
+
+  db.collection("users").save(user, {}, function(err, coll){
+    gmailer.sendMail(mailOptions, function(error, response){
+      if(error) self.now.error(error);
+      else self.now.successfullySent(response);
+    });
   });
 
   var mailOptions = {
     from: process.env["emailUserName"],
     to: emailId,
-    subject: "You have been successfully registered",
-    html: "<b>You have been successfully registered</b>"
+    subject: "Confirm Registration on Mint",
+    html: "Click on the below mentioned link to activate your Mint account\n\n\n <a href='"+APP_URL+"/activate/"+token+"+'></a>"
   };
 
-  gmailer.sendMail(mailOptions, function(error, response){
-    if(error) self.now.error(error);
-    else self.now.successfullySent(response);
-  });
+  
  };	
 
 everyone.now.addName = function(name){
